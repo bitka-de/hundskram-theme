@@ -19,6 +19,7 @@ class Theme {
 
     public function enqueue() {
         wp_enqueue_style('theme-style', get_stylesheet_uri());
+        wp_enqueue_style('theme-assets-style', get_template_directory_uri() . '/assets/css/styles.css');
         wp_enqueue_script('theme-script', get_template_directory_uri() . '/assets/js/main.js', [], false, true);
     }
 }

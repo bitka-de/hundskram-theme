@@ -1,0 +1,54 @@
+# WordPress core files
+/wp-admin/
+/wp-includes/
+license.txt
+readme.html
+
+# WordPress config
+wp-config.php
+
+# Log files and databases
+*.log
+*.sql
+*.sqlite
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Node modules and build output
+node_modules/
+dist/
+build/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Composer dependencies
+/vendor/
+composer.lock
+
+# SASS / CSS cache
+.sass-cache/
+*.css.map
+
+# IDE files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Env files
+.env
+.env.*
+
+# WordPress uploads
+/wp-content/uploads/
+
+# Custom cache or temp files
+*.tmp
+.cache/
+*.bak
+
+# Hundskram theme specific
+*.local.php

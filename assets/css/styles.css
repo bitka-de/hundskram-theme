@@ -174,7 +174,7 @@
   }
 }
 :root {
-  --max-width: 60rem;
+  --max-width: 75rem;
   --container-padding: 1rem;
 }
 .boxed {

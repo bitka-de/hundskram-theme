@@ -1,0 +1,1 @@
+<?php /* Template für Produktanzeige */ ?>

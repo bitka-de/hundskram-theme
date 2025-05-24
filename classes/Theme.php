@@ -8,6 +8,7 @@ class Theme
     {
         add_action('after_setup_theme', [$this, 'setup']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue']);
+        add_action('customize_register', [__CLASS__, 'add_logo_customizer']);
     }
 
     public function setup()
@@ -22,8 +23,19 @@ class Theme
         register_nav_menus([
             'primary' => __('Primäre Navigation', 'hundskram'),
             'footer' => __('Footer Navigation', 'hundskram'),
-            // weitere Menüs nach Bedarf
         ]);
+        // SVG & WebP Upload erlauben
+        add_filter('upload_mimes', [__CLASS__, 'allow_svg_webp_uploads']);
+    }
+
+    /**
+     * Erlaubt SVG und WebP Uploads
+     */
+    public static function allow_svg_webp_uploads($mimes)
+    {
+        $mimes['svg'] = 'image/svg+xml';
+        $mimes['webp'] = 'image/webp';
+        return $mimes;
     }
 
     public function enqueue()
@@ -31,6 +43,27 @@ class Theme
         wp_enqueue_style('theme-style', get_stylesheet_uri());
         wp_enqueue_style('theme-assets-style', get_template_directory_uri() . '/assets/css/styles.css');
         wp_enqueue_script('theme-script', get_template_directory_uri() . '/assets/js/main.js', [], false, true);
+    }
+
+    /**
+     * Fügt dem Customizer die Möglichkeit hinzu, ein Logo (PNG, WEBP, JPEG, SVG) hochzuladen
+     */
+    public static function add_logo_customizer($wp_customize)
+    {
+        $wp_customize->add_setting('hundskram_logo', [
+            'default' => '',
+            'sanitize_callback' => function($input) {
+                $filetype = wp_check_filetype($input);
+                $allowed = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
+                return in_array($filetype['type'], $allowed) ? $input : '';
+            },
+        ]);
+        $wp_customize->add_control(new \WP_Customize_Image_Control($wp_customize, 'hundskram_logo', [
+            'label'    => __('Logo (PNG, WEBP, JPEG, SVG)', 'hundskram'),
+            'section'  => 'title_tagline',
+            'settings' => 'hundskram_logo',
+            'mime_type' => 'image',
+        ]));
     }
 
     /**

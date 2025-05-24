@@ -1,13 +1,74 @@
 @import "tailwindcss";
 
 :root {
-    --max-width: 75rem;
-    --container-padding: 1rem;
+  --max-width: 75rem;
+  --container-padding: 1rem;
 }
 
 .boxed {
-    width: 100%;
-    margin-inline: auto;
-    padding-inline: var(--container-padding);
-    max-width: var(--max-width);
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: var(--container-padding);
+  max-width: var(--max-width);
+}
+
+/* Overlay Animation */
+#search-overlay {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+#search-overlay:not(.hidden) {
+  opacity: 1;
+}
+
+/* Popover Animation */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Toggle Switch */
+#search-type-toggle {
+  box-shadow: 0 1px 4px 0 rgba(60, 72, 88, 0.08);
+}
+
+#search-type-indicator {
+  box-shadow: 0 2px 8px 0 rgba(60, 72, 88, 0.1);
+}
+
+#search-type-toggle span {
+  z-index: 2;
+}
+
+#search-type-toggle:focus {
+  outline: 2px solid var(--color-blue-400);
+  outline-offset: 2px;
+}
+
+/* Loader Spinner */
+.loader {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 4px solid #e5e7eb;
+  border-top: 4px solid #2563eb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

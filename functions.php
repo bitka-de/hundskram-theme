@@ -5,7 +5,8 @@ require_once get_template_directory() . '/classes/Header.php';
 
 new \Hundskram\Theme();
 new \Hundskram\WooSupport();
-new \Hundskram\Header();
+
+
 
 add_action('wp_ajax_hundskram_live_search', function() {
     $query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';

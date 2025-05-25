@@ -16,7 +16,7 @@ class Header
         $html .= '>';
         $logo = get_theme_mod('hundskram_logo');
         if ($logo) {
-            $html .= '<img src="' . esc_url($logo) . '" alt="Logo" class="h-10 max-w-none w-auto object-contain" style="max-width:none;">';
+            $html .= '<img src="' . esc_url($logo) . '" alt="Logo" class="max-h-11 max-w-none w-auto object-contain" style="max-width:none;">';
         } else {
             $html .= get_bloginfo('name');
         }
@@ -43,16 +43,15 @@ class Header
         }
     }
 
-    public static function render_cart_total(): string
+
+    public static function button_class(): string
     {
-        if (!function_exists('WC') || !WC()->cart) return '';
-        $total = wc_price(WC()->cart->get_cart_total());
-        return '<span class="cart-total text-sm font-semibold mr-2">' . $total . '</span>';
+        return 'inline-flex items-center justify-center w-10 h-10 rounded bg-white border border-neutral-300 shadow-sm hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400';
     }
 
     public static function render_search_button(): string
     {
-        return '<button id="search-toggle" class="p-2 rounded bg-white border border-neutral-300 shadow-sm hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400" aria-label="Suche öffnen">'
+        return '<button id="search-toggle" class="' . self::button_class() . '" aria-label="Suche öffnen">'
             . '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">'
             . '<circle cx="11" cy="11" r="7" stroke-width="2" />'
             . '<path stroke-width="2" d="M21 21l-3.5-3.5" />'
@@ -96,7 +95,7 @@ class Header
     public static function render_cart_button(): string
     {
         $count = function_exists('WC') && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
-        return '<a id="cart-button" href="#" class="inline-flex items-center gap-1 px-3 py-2 rounded bg-white border border-neutral-300 shadow-sm hover:bg-neutral-200 transition-colors relative">'
+        return '<a id="cart-button" href="#" class="' . self::button_class() . ' relative">'
             . '<span class="material-icons">'
             . '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256">'
             . '<path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H40V56h176v144ZM176 88a48 48 0 0 1-96 0 8 8 0 0 1 16 0 32 32 0 0 0 64 0 8 8 0 0 1 16 0Z" />'
@@ -133,7 +132,7 @@ class Header
     public static function render_user_dropdown(): string
     {
         $html = '<div class="relative user-dropdown">';
-        $html .= '<button type="button" class="inline-flex items-center justify-center w-10 h-10 rounded bg-white border border-neutral-300 shadow-sm hover:bg-neutral-200 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-400 user-dropdown-toggle" aria-haspopup="true" aria-expanded="false">';
+        $html .= '<button type="button" class="' . self::button_class() . ' user-dropdown-toggle" aria-haspopup="true" aria-expanded="false">';
         $html .= '<span class="sr-only">Mein Konto</span>';
         $html .= '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256">';
         $html .= '<path d="M230.92 212c-15.23-26.33-38.7-45.21-66.09-54.16a72 72 0 1 0-73.66 0c-27.39 8.94-50.86 27.82-66.09 54.16a8 8 0 1 0 13.85 8c18.84-32.56 52.14-52 89.07-52s70.23 19.44 89.07 52a8 8 0 1 0 13.85-8ZM72 96a56 56 0 1 1 56 56 56.06 56.06 0 0 1-56-56Z" />';

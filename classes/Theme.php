@@ -9,6 +9,7 @@ class Theme
         add_action('after_setup_theme', [$this, 'setup']);
         add_action('wp_enqueue_scripts', [$this, 'enqueue']);
         add_action('customize_register', [__CLASS__, 'add_logo_customizer']);
+        add_action('after_setup_theme', function() { add_filter('show_admin_bar', '__return_false'); });
     }
 
     public function setup()

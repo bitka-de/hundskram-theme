@@ -148,18 +148,62 @@ class Costumizer
     public function register_header_options($wp_customize)
     {
         $wp_customize->add_section('hundskram_header_section', [
-            'title' => __('Header', 'hundskram'),
+            'title' => __('Elemente anzeigen', 'hundskram'),
             'priority' => 10,
         ]);
         $wp_customize->add_setting('hundskram_header_show_cart_total', [
             'type' => 'theme_mod',
             'default' => true,
-            'sanitize_callback' => function($value) { return (bool)$value; },
+            'sanitize_callback' => function ($value) {
+                return (bool)$value;
+            },
         ]);
         $wp_customize->add_control('hundskram_header_show_cart_total', [
             'type' => 'checkbox',
             'section' => 'hundskram_header_section',
             'label' => __('Warenkorb-Gesamtpreis im Header anzeigen', 'hundskram'),
+        ]);
+
+        $wp_customize->add_setting('hundskram_header_show_search', [
+            'type' => 'theme_mod',
+            'default' => true,
+            'sanitize_callback' => function ($value) {
+                return (bool)$value;
+            },
+        ]);
+        $wp_customize->add_control('hundskram_header_show_search', [
+            'type' => 'checkbox',
+            'section' => 'hundskram_header_section',
+            'label' => __('Suchfeld im Header anzeigen', 'hundskram'),
+        ]);
+        // === Customizer: Header-Elemente Sortierung als Unterregister ===
+        $wp_customize->add_panel('hundskram_header_panel', [
+            'title' => __('Header', 'hundskram'),
+            'priority' => 10,
+        ]);
+        // Hauptoptionen (z.B. Preis anzeigen)
+        $wp_customize->get_section('hundskram_header_section')->panel = 'hundskram_header_panel';
+        // Sortier-Subsection
+        $wp_customize->add_section('hundskram_header_sort_section', [
+            'title' => __('Elemente sortieren', 'hundskram'),
+            'priority' => 20,
+            'panel' => 'hundskram_header_panel',
+        ]);
+        $wp_customize->add_setting('hundskram_header_elements_order', [
+            'type' => 'theme_mod',
+            'default' => 'price,cart,user,search',
+            'sanitize_callback' => function ($input) {
+                $allowed = ['price', 'cart', 'user', 'search'];
+                $arr = array_map('trim', explode(',', $input));
+                $arr = array_values(array_intersect($arr, $allowed));
+                return implode(',', $arr);
+            },
+        ]);
+        $wp_customize->add_control('hundskram_header_elements_order', [
+            'label' => __('Header-Elemente Reihenfolge', 'hundskram'),
+            'section' => 'hundskram_header_sort_section',
+            'type' => 'text',
+            'description' => __('Kommagetrennte Reihenfolge, z.B.: price,cart,user,search', 'hundskram'),
         ]);
     }
 }

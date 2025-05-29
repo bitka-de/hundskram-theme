@@ -108,6 +108,7 @@ class Header
     public static function render_cart_panel(): string
     {
         $cart_url = function_exists('wc_get_cart_url') ? esc_url(wc_get_cart_url()) : '#';
+        $checkout_url = function_exists('wc_get_checkout_url') ? esc_url(wc_get_checkout_url()) : '#';
         $mini_cart = '';
         if (function_exists('woocommerce_mini_cart')) {
             ob_start();
@@ -117,14 +118,15 @@ class Header
             $mini_cart = '<p>Warenkorb-Plugin nicht aktiv.</p>';
         }
         return '<div id="cart-overlay" class="fixed inset-0 z-50 hidden bg-black/40 backdrop-blur-sm transition-opacity"></div>'
-            . '<aside id="cart-panel" class="fixed top-0 right-0 h-full w-full max-w-md bg-white shadow-2xl z-50 translate-x-full transition-transform flex flex-col border-l border-neutral-200 sm:rounded-l-xl sm:top-4 sm:bottom-4 sm:right-4 sm:h-auto sm:max-h-[90vh] sm:w-[95vw] md:w-[32rem]">'
-            . '<div class="flex items-center justify-between p-4 border-b bg-neutral-50 sticky top-0 z-10">'
+            . '<aside id="cart-panel" class="fixed top-0 right- h-full w-full max-w-md bg-white shadow-2xl z-50 translate-x-full transition-transform flex flex-col border-l border-neutral-200 sm:rounded-l-xl sm:top-4 sm:bottom-4 sm:right-4 sm:h-auto sm:max-h-[90vh] sm:w-[95vw] md:w-[32rem]">'
+            . '<div class="flex items-center justify-between p-2 border-b bg-neutral-50 sticky top-0 z-10">'
             . '<h2 class="text-lg font-bold">Warenkorb</h2>'
             . '<button id="close-cart-panel" class="text-2xl leading-none text-neutral-500 hover:text-neutral-800 bg-neutral-100 rounded-full w-9 h-9 flex items-center justify-center transition" aria-label="Schließen">&times;</button>'
             . '</div>'
             . '<div class="flex-1 overflow-y-auto p-4" id="cart-panel-content">' . $mini_cart . '</div>'
-            . '<div class="p-4 border-t bg-white sticky bottom-0 z-10">'
-            . '<a href="' . $cart_url . '" class="w-full block text-center bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition">Zum Warenkorb</a>'
+            . '<div class="p-4 border-t bg-white sticky bottom-0 z-10 flex gap-2">'
+            . '<a href="' . $cart_url . '" class="flex-1 block text-center bg-blue-600 text-white font-bold py-3 rounded hover:bg-blue-700 transition">Zum Warenkorb</a>'
+            . '<a href="' . $checkout_url . '" class="flex-1 block text-center bg-green-600 text-white font-bold py-3 rounded hover:bg-green-700 transition">Direkt zur Kasse</a>'
             . '</div>'
             . '</aside>';
     }
@@ -161,6 +163,44 @@ class Header
             }
         }
         $html .= '</div></div>';
+        return $html;
+    }
+
+    /**
+     * Gibt die Admin-Schnellzugriffsleiste für Administratoren zurück (Customizer, Dashboard, Edit Page).
+     */
+    public static function render_admin_shortcuts(): string
+    {
+        if (!current_user_can('administrator') || is_customize_preview()) {
+            return '';
+        }
+        $svg_admin_class = 'h-6 w-6 m-2';
+        $admin_links = [
+            [
+                'url' => esc_url(admin_url()),
+                'title' => 'Dashboard',
+                'svg' => '<svg xmlns="http://www.w3.org/2000/svg" class="' . esc_attr($svg_admin_class) . '" fill="currentColor" viewBox="0 0 256 256"><path d="M219.31,108.68l-80-80a16,16,0,0,0-22.62,0l-80,80A15.87,15.87,0,0,0,32,120v96a8,8,0,0,0,8,8H216a8,8,0,0,0,8-8V120A15.87,15.87,0,0,0,219.31,108.68ZM208,208H48V120l80-80,80,80Z"></path></svg>'
+            ],
+            [
+                'url' => esc_url(admin_url('customize.php')),
+                'title' => 'Customizer',
+                'svg' => '<svg xmlns="http://www.w3.org/2000/svg" class="' . esc_attr($svg_admin_class) . '" fill="currentColor" viewBox="0 0 256 256"><path d="M40 88h33a32 32 0 0 0 62 0h81a8 8 0 0 0 0-16h-81a32 32 0 0 0-62 0H40a8 8 0 0 0 0 16Zm64-24a16 16 0 1 1-16 16 16 16 0 0 1 16-16Zm112 104h-17a32 32 0 0 0-62 0H40a8 8 0 0 0 0 16h97a32 32 0 0 0 62 0h17a8 8 0 0 0 0-16Zm-48 24a16 16 0 1 1 16-16 16 16 0 0 1-16 16Z" /></svg>'
+            ]
+        ];
+        $html = '<div class="fixed top-1/2 right-6 z-30 transform -translate-y-1/2 flex flex-col items-center bg-white/90 shadow-lg rounded-md overflow-clip border border-neutral-200 text-neutral-600 hover:text-neutral-900 divide-y divide-neutral-300">';
+        foreach ($admin_links as $link) {
+            $html .= '<a class="inline-flex justify-center items-center hover:bg-neutral-100" href="' . $link['url'] . '" title="' . esc_attr($link['title']) . '" target="_blank">' . $link['svg'] . '</a>';
+        }
+        if (is_page() || is_single()) {
+            $edit_url = get_edit_post_link(get_queried_object_id());
+            if ($edit_url) {
+                $html .= '<a href="' . esc_url($edit_url) . '" title="Seite/Beitrag bearbeiten" target="_blank">';
+                $html .= '<svg xmlns="http://www.w3.org/2000/svg" class="' . esc_attr($svg_admin_class) . '" fill="currentColor" viewBox="0 0 256 256">';
+                $html .= '<path d="m227.32 73.37-44.69-44.68a16 16 0 0 0-22.63 0L36.69 152A15.86 15.86 0 0 0 32 163.31V208a16 16 0 0 0 16 16h168a8 8 0 0 0 0-16H115.32l112-112a16 16 0 0 0 0-22.63ZM136 75.31 152.69 92 68 176.69 51.31 160ZM48 208v-28.69L76.69 208Zm48-3.31L79.32 188 164 103.31 180.69 120Zm96-96L147.32 64l24-24L216 84.69Z" />';
+                $html .= '</svg></a>';
+            }
+        }
+        $html .= '</div>';
         return $html;
     }
 }

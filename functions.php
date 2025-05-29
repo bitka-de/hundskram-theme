@@ -105,6 +105,7 @@ add_action('wp_ajax_nopriv_hundskram_live_search', function () {
 });
 
 
+
 function hk_footer_logo()
 {
     $logo = get_theme_mod('hundskram_logo');

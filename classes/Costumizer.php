@@ -9,6 +9,7 @@ class Costumizer
         add_action('customize_register', [$this, 'register_footer_categories']);
         add_action('customize_register', [$this, 'register_footer_columns']);
         add_action('customize_register', [$this, 'register_header_options']);
+        add_action('customize_register', [$this, 'register_header_meta_text']);
     }
 
     public function register_footer_categories($wp_customize)
@@ -204,6 +205,37 @@ class Costumizer
             'section' => 'hundskram_header_sort_section',
             'type' => 'text',
             'description' => __('Kommagetrennte Reihenfolge, z.B.: price,cart,user,search', 'hundskram'),
+        ]);
+    }
+
+    public function register_header_meta_text($wp_customize)
+    {
+        $wp_customize->add_section('hundskram_header_meta_section', [
+            'title' => __('Meta Info', 'hundskram'),
+            'priority' => 30,
+            'panel' => 'hundskram_header_panel',
+        ]);
+        $wp_customize->add_setting('hundskram_header_meta_text', [
+            'type' => 'theme_mod',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default' => '',
+        ]);
+        $wp_customize->add_control('hundskram_header_meta_text', [
+            'label' => __('Inhalt', 'hundskram'),
+            'section' => 'hundskram_header_meta_section',
+            'type' => 'text',
+        ]);
+        $wp_customize->add_setting('hundskram_header_meta_active', [
+            'type' => 'theme_mod',
+            'default' => true,
+            'sanitize_callback' => function ($value) {
+                return (bool)$value;
+            },
+        ]);
+        $wp_customize->add_control('hundskram_header_meta_active', [
+            'label' => __('Meta Text zeigen', 'hundskram'),
+            'section' => 'hundskram_header_meta_section',
+            'type' => 'checkbox',
         ]);
     }
 }

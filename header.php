@@ -27,7 +27,28 @@ $hk_header_user_dropdown = $hk_header::render_user_dropdown(); #User Login Dropd
 </head>
 
 <body <?php body_class('min-h-screen flex flex-col'); ?>>
-    <header class="bg-neutral-100">
+
+    <?php if (get_theme_mod('hundskram_header_meta_active')) : ?>
+        <section class="bg-gradient-to-tl from-brand-dark to-brand text-white">
+            <div class="boxed flex text-sm relative items-center justify-center py-1.5">
+                <?php
+                $meta_text = get_theme_mod('hundskram_header_meta_text', 'Meta info');
+                if (strlen($meta_text) < 3) {
+                    $meta_text = 'Meta info ' . get_bloginfo('name');
+                }
+                echo esc_html($meta_text);
+                ?>
+                <button class="bg-black/10 opacity-60 hover:opacity-100 rounded absolute right-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class=" size-5 m-0.5" fill="currentColor" viewBox="0 0 256 256">
+                        <path d="M205.66 194.34a8 8 0 0 1-11.32 11.32L128 139.31l-66.34 66.35a8 8 0 0 1-11.32-11.32L116.69 128 50.34 61.66a8 8 0 0 1 11.32-11.32L128 116.69l66.34-66.35a8 8 0 0 1 11.32 11.32L139.31 128Z" />
+                    </svg>
+                </button>
+            </div>
+        </section>
+    <?php endif; ?>
+
+
+    <header class="bg-neutral sticky top-0">
         <div class="boxed flex items-center justify-between py-4">
             <?= $hk_header_logo; ?>
 
@@ -49,7 +70,7 @@ $hk_header_user_dropdown = $hk_header::render_user_dropdown(); #User Login Dropd
                     $order = str_replace(['search,', ',search', 'search'], '', $order);
                 }
                 $order = array_map('trim', explode(',', $order));
-                $allowed = ['price','cart','user','search'];
+                $allowed = ['price', 'cart', 'user', 'search'];
                 $order = array_values(array_intersect($order, $allowed));
                 foreach ($order as $el) {
                     switch ($el) {
@@ -73,5 +94,12 @@ $hk_header_user_dropdown = $hk_header::render_user_dropdown(); #User Login Dropd
             </div>
         </div>
     </header>
+    <?php
+    if (current_user_can('edit_posts')) {
+        echo $hk_header::render_admin_shortcuts();
+    }
+
+    include_once get_template_directory() . '/src/js/header.php';
+    ?>
+
     <main class="grow">
-        <?php include_once get_template_directory() . '/src/js/header.php'; ?>

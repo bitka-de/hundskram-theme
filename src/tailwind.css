@@ -186,3 +186,8 @@
     display: none !important;
   }
 }
+
+
+.boxed-scroll{
+  padding-left: calc(((100vw - var(--max-width)) / 2) + var(--container-padding));
+}

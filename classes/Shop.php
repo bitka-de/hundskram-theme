@@ -21,4 +21,34 @@ class Shop
         }
         return '<div id="hk_cart_total">' . WC()->cart->get_cart_total() . '</div>';
     }
+
+    /**
+     * Gibt alle Produktkategorien mit Name, Beschreibung und Bild (URL) als Array zurück.
+     *
+     * @return array
+     */
+    public function get_all_categories(): array
+    {
+        $args = array(
+            'taxonomy'   => 'product_cat',
+            'hide_empty' => false,
+        );
+        $terms = get_terms($args);
+        $categories = [];
+        if (!empty($terms) && !is_wp_error($terms)) {
+            foreach ($terms as $term) {
+                $thumbnail_id = get_term_meta($term->term_id, 'thumbnail_id', true);
+                $image_url = $thumbnail_id ? wp_get_attachment_url($thumbnail_id) : '';
+                $categories[] = [
+                    'id'          => $term->term_id,
+                    'name'        => $term->name,
+                    'description' => $term->description,
+                    'image'       => $image_url,
+                    'slug'        => $term->slug,
+                    'count'       => $term->count,
+                ];
+            }
+        }
+        return $categories;
+    }
 }

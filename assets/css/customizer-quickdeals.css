@@ -1,0 +1,3 @@
+.quickdeals-repeater .button-link-delete { color: #c00; background: none; border: none; cursor: pointer; font-size: 1.2em; }
+.quickdeals-repeater .button-link-delete:hover { color: #a00; }
+.quickdeals-repeater .quickdeals-select { min-width: 180px; }

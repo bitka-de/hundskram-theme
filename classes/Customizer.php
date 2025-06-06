@@ -2,70 +2,27 @@
 
 namespace Hundskram;
 
-class Costumizer
+use Hundskram\Customizer\Header;
+
+class Customizer
 {
     public function __construct()
     {
-        add_action('customize_register', [$this, 'register_footer_categories']);
-        add_action('customize_register', [$this, 'register_footer_columns']);
-        add_action('customize_register', [$this, 'register_header_options']);
-        add_action('customize_register', [$this, 'register_header_meta_text']);
+        // add_action('customize_register', [$this, 'register_footer_categories']);
+        // add_action('customize_register', [$this, 'register_footer_columns']);
+        // add_action('customize_register', [$this, 'register_header_options']);
+        // add_action('customize_register', [$this, 'register_header_meta_text']);
+        // add_action('customize_register', [$this, 'register_quick_deals']);
+
+        // Header Customizer
+        // add_action('customize_register', [Header::class, 'header_options']);
+
     }
 
-    public function register_footer_categories($wp_customize)
-    {
-        $wp_customize->add_section('hundskram_footer_section', [
-            'title' => __('Footer: Beliebte Kategorien', 'hundskram'),
-            'priority' => 160,
-        ]);
-        $cats = get_terms([
-            'taxonomy' => 'product_cat',
-            'hide_empty' => false,
-        ]);
-        $choices = [];
-        if (!empty($cats) && !is_wp_error($cats)) {
-            foreach ($cats as $cat) {
-                $choices[$cat->term_id] = $cat->name;
-            }
-        }
-        $wp_customize->add_setting('hundskram_footer_popular_cat_ids', [
-            'default' => [],
-            'type' => 'theme_mod',
-            'sanitize_callback' => function ($input) {
-                if (is_array($input)) {
-                    return array_map('intval', $input);
-                }
-                return [];
-            },
-        ]);
-        $wp_customize->add_control(new \WP_Customize_Control(
-            $wp_customize,
-            'hundskram_footer_popular_cat_ids',
-            [
-                'label' => __('Beliebte Kategorien (wähle & sortiere)', 'hundskram'),
-                'section' => 'hundskram_footer_section',
-                'type' => 'select',
-                'choices' => $choices,
-                'input_attrs' => [
-                    'multiple' => 'multiple',
-                    'style' => 'height: 200px;',
-                ],
-                'description' => __('Halte Cmd/Ctrl gedrückt, um mehrere Kategorien auszuwählen. Die Reihenfolge entspricht der Auswahlreihenfolge.', 'hundskram'),
-            ]
-        ));
-        for ($i = 1; $i <= 5; $i++) {
-            $wp_customize->add_setting("hundskram_footer_popular_page_$i", [
-                'type' => 'theme_mod',
-                'sanitize_callback' => 'absint',
-                'default' => '',
-            ]);
-            $wp_customize->add_control("hundskram_footer_popular_page_$i", [
-                'label' => sprintf(__('Beliebte Kategorie Link %d (Seite)', 'hundskram'), $i),
-                'section' => 'hundskram_footer_section',
-                'type' => 'dropdown-pages',
-            ]);
-        }
-    }
+
+
+
+
 
     public function register_footer_columns($wp_customize)
     {
@@ -238,4 +195,38 @@ class Costumizer
             'type' => 'checkbox',
         ]);
     }
+
+        public function register_quick_deals($wp_customize)
+        {
+            $wp_customize->add_section('hundskram_quick_deals_section', [
+                'title'    => __('Quick Deals', 'hundskram'),
+                'priority' => 180,
+            ]);
+
+            $products = get_posts([
+                'post_type'      => 'product',
+                'posts_per_page' => -1,
+                'post_status'    => 'publish',
+                'orderby'        => 'title',
+                'order'          => 'ASC',
+            ]);
+            $choices = [];
+            foreach ($products as $product) {
+                $choices[$product->ID] = $product->post_title;
+            }
+
+            for ($i = 1; $i <= 5; $i++) {
+                $wp_customize->add_setting("hundskram_quick_deal_product_$i", [
+                    'type' => 'theme_mod',
+                    'sanitize_callback' => 'absint',
+                    'default' => '',
+                ]);
+                $wp_customize->add_control("hundskram_quick_deal_product_$i", [
+                    'label' => sprintf(__('Quick Deal Produkt %d', 'hundskram'), $i),
+                    'section' => 'hundskram_quick_deals_section',
+                    'type' => 'select',
+                    'choices' => ['' => __('Bitte wählen', 'hundskram')] + $choices,
+                ]);
+            }
+        }
 }

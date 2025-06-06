@@ -3,7 +3,11 @@
     <?php
     if (have_posts()) :
         while (have_posts()) : the_post();
-            if (is_front_page()) {
+            if (is_page('warenkorb')) {
+                get_template_part('template-parts/content', 'cart');
+            } elseif (is_page('kasse')) {
+                get_template_part('template-parts/content', 'checkout');
+            } elseif (is_front_page()) {
                 get_template_part('template-parts/content', 'frontpage');
             } elseif (is_singular('product')) {
                 get_template_part('template-parts/content', 'product');

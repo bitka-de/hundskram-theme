@@ -29,13 +29,15 @@
                 $desc = !empty($cat['description']) ? esc_html($cat['description']) : '';
             ?>
                 <div class=" flex-shrink-0 text-center">
-                    <div class="aspect-square w-28 mx-auto mb-2 flex items-center justify-center">
-                        <img src="<?php echo $img; ?>" alt="<?php echo $name; ?>" class="w-full h-full object-cover rounded-full outline-offset-2 outline-2 hover:outline-4 outline-neutral transition-all duration-200 hover:outline-brand" />
-                    </div>
-                    <h3 class="font-light text-base mb-1"><?php echo $name; ?></h3>
-                    <?php if ($desc) : ?>
-                        <p class="text-xs text-gray-500"><?php echo $desc; ?></p>
-                    <?php endif; ?>
+                    <a href="<?php echo esc_url(get_term_link($cat['id'], 'product_cat')); ?>" class="group block focus:outline-none focus:ring-2 focus:ring-brand rounded-xl transition">
+                        <div class="aspect-square w-28 mx-auto mb-2 flex items-center justify-center">
+                            <img src="<?php echo $img; ?>" alt="<?php echo $name; ?>" class="w-full h-full object-cover rounded-full outline-offset-2 outline-2 hover:outline-4 outline-neutral transition-all duration-200 group-hover:outline-brand" />
+                        </div>
+                        <h3 class="font-light text-base mb-1 group-hover:text-brand transition"><?php echo $name; ?></h3>
+                        <?php if ($desc) : ?>
+                            <p class="text-xs text-gray-500 group-hover:text-brand/80 transition"><?php echo $desc; ?></p>
+                        <?php endif; ?>
+                    </a>
                 </div>
             <?php endforeach; ?>
         </div>

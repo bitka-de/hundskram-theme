@@ -48,7 +48,7 @@ $hk_header_user_dropdown = $hk_header::render_user_dropdown(); #User Login Dropd
     <?php endif; ?>
 
 
-    <header class="bg-white shadow sticky top-0">
+    <header class="bg-white shadow sticky top-0 z-50">
         <div class="boxed flex items-center justify-between py-4">
             <?= $hk_header_logo; ?>
 

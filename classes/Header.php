@@ -95,14 +95,17 @@ class Header
     public static function render_cart_button(): string
     {
         $count = function_exists('WC') && WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
-        return '<a id="cart-button" href="#" class="' . self::button_class() . ' relative">'
+        $html = '<a id="cart-button" href="#" class="' . self::button_class() . ' relative">'
             . '<span class="material-icons">'
             . '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 256 256">'
             . '<path d="M216 40H40a16 16 0 0 0-16 16v144a16 16 0 0 0 16 16h176a16 16 0 0 0 16-16V56a16 16 0 0 0-16-16Zm0 160H40V56h176v144ZM176 88a48 48 0 0 1-96 0 8 8 0 0 1 16 0 32 32 0 0 0 64 0 8 8 0 0 1 16 0Z" />'
             . '</svg>'
-            . '</span>'
-            . '<span class="cart-count absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs border border-white shadow">' . $count . '</span>'
-            . '</a>';
+            . '</span>';
+        if ($count > 0) {
+            $html .= '<span class="cart-count absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs border border-white shadow">' . $count . '</span>';
+        }
+        $html .= '</a>';
+        return $html;
     }
 
     public static function render_cart_panel(): string

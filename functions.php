@@ -3,13 +3,14 @@ require_once get_template_directory() . '/classes/Theme.php';
 require_once get_template_directory() . '/classes/WooSupport.php';
 require_once get_template_directory() . '/classes/Header.php';
 require_once get_template_directory() . '/classes/Shop.php';
-require_once get_template_directory() . '/classes/Costumizer.php';
+require_once get_template_directory() . '/classes/Customizer.php';
 
 new \Hundskram\Theme();
 new \Hundskram\WooSupport();
 new \Hundskram\Header();
 new \Hundskram\Shop();
-new \Hundskram\Costumizer();
+new \Hundskram\Customizer();
+
 
 add_action('wp_ajax_hundskram_live_search', function () {
     $query = isset($_GET['s']) ? sanitize_text_field($_GET['s']) : '';
@@ -105,7 +106,6 @@ add_action('wp_ajax_nopriv_hundskram_live_search', function () {
 });
 
 
-
 function hk_footer_logo()
 {
     $logo = get_theme_mod('hundskram_logo');
@@ -119,3 +119,6 @@ function hk_footer_logo()
     </a>
 <?php
 }
+
+
+
